@@ -4,6 +4,11 @@
     <color name="colorPrimaryDark">#0288d1</color>
     <color name="colorAccent">#03a9f4</color>
 
+    <color name="notificationColor">#01579b</color>
     <color name="titleColor">#ffffff</color>
+
+    <color name="indicatorColor">#ef5350</color>
+
+    <color name="bottomBackgroundColor">#bdbdbd</color>
 
 </resources>

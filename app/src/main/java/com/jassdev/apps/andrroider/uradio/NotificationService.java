@@ -9,11 +9,13 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 import android.widget.RemoteViews;
 
 import com.jassdev.apps.andrroider.uradio.Utils.Const;
 import com.jassdev.apps.andrroider.uradio.Utils.Player;
+
 
 public class NotificationService extends Service {
 
@@ -35,7 +37,7 @@ public class NotificationService extends Service {
 
         Intent playIntent = new Intent(this, NotificationService.class);
         playIntent.setAction(Const.ACTION.PLAY_ACTION);
-        PendingIntent pplayIntent = PendingIntent.getService(this, 0,
+        PendingIntent pendingPlayIntent = PendingIntent.getService(this, 0,
                 playIntent, 0);
 
         Intent closeIntent = new Intent(this, NotificationService.class);
@@ -43,7 +45,7 @@ public class NotificationService extends Service {
         PendingIntent pcloseIntent = PendingIntent.getService(this, 0,
                 closeIntent, 0);
 
-        views.setOnClickPendingIntent(R.id.status_bar_play, pplayIntent);
+        views.setOnClickPendingIntent(R.id.status_bar_play, pendingPlayIntent);
 
         views.setOnClickPendingIntent(R.id.status_bar_collapse, pcloseIntent);
 
@@ -74,10 +76,22 @@ public class NotificationService extends Service {
                 MainActivity.controlIsActivated = false;
 //            }
         }
-        status = new Notification.Builder(this).build();
-        status.contentView = views;
+
+// .setSmallIcon(R.mipmap.ic_logo) - почему-то без него не работает кастомный лэйаут
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                status = new Notification.Builder(this)
+                        .setCustomContentView(views)
+                        .setSmallIcon(R.mipmap.ic_logo)
+                        .build();
+            } else {
+                status = new Notification.Builder(this)
+                        .setSmallIcon(R.mipmap.ic_logo)
+                        .build();
+                status.contentView = views;
+            }
+        //закрепляет в штоке уведомление
         status.flags = Notification.FLAG_ONGOING_EVENT;
-        status.icon = R.mipmap.ic_launcher;
         status.contentIntent = pendingIntent;
         startForeground(Const.FOREGROUND_SERVICE, status);
     }
@@ -126,6 +140,4 @@ public class NotificationService extends Service {
 
         return START_STICKY;
     }
-
-
 }

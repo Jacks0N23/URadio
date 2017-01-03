@@ -1,51 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal" >
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ImageView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/logo"/>
+        android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="10dp"
-        android:orientation="horizontal" >
-
-        <ImageButton
-            android:id="@+id/status_bar_play"
-            android:layout_width="45dp"
-            android:layout_gravity="center"
-            android:layout_height="45dp"
-            android:background="@drawable/play_button"
-            android:src="@drawable/play"
-            android:scaleType="fitCenter"
-            android:contentDescription="@string/cd_play" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@color/notificationColor" />
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/status_bar_button_info_container_padding_left" >
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
 
+            <ImageButton
+                android:id="@+id/status_bar_play"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:background="@drawable/play_button"
+                android:contentDescription="@string/cd_play"
+                android:scaleType="fitCenter"
+                android:src="@drawable/play" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/status_bar_button_info_container_padding_left">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/titleColor"
+                    android:text="Artist"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/titleColor"
+                    android:text="Song"
+                    />
+            </LinearLayout>
+
+
+            <ImageButton
+                android:id="@+id/status_bar_collapse"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/close" />
         </LinearLayout>
 
-
-        <ImageButton
-            android:id="@+id/status_bar_collapse"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:src="@drawable/close"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"/>
-    </LinearLayout>
-
-</RelativeLayout>
+    </RelativeLayout>
+</layout>

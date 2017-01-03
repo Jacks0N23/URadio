@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
      * https://tproger.ru/articles/android-online-radio/
      */
 
-    private final static String stream = "http://uradio.pro:8000/liveHD";
     // Boolean for check if play/pause button is activated
     static boolean controlIsActivated = false;
     MediaPlayer mMediaPlayer;
@@ -34,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.another_main);
-        setSupportActionBar(binding.toolbar);
 
         binding.play.setOnClickListener(new View.OnClickListener() {
             @Override
