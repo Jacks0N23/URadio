@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        android:id="@+id/activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/bckg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar"
+            android:scaleType="centerCrop"
+            app:srcCompat="@mipmap/ic_logo" />
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/title_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rockabilly"
+                    android:textColor="@color/titleColor"
+                    android:textSize="@dimen/title_size" />
+
+                <TextView
+                    android:id="@+id/data_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:onClick="enter"
+                    android:text="0.0 KB"
+                    android:textColor="@color/titleColor"
+                    android:textSize="@dimen/data_size" />
+            </RelativeLayout>
+
+        </android.support.v7.widget.Toolbar>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/toolbar"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="1">
+
+
+                <FrameLayout
+                    android:id="@+id/frameLayout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true">
+
+                    <com.wang.avi.AVLoadingIndicatorView
+                        android:id="@+id/load_animation"
+                        style="@style/AVLoadingIndicatorView.Small"
+                        android:layout_width="@dimen/play_size"
+                        android:layout_height="@dimen/play_size"
+                        android:layout_gravity="center"
+                        android:background="@drawable/play_button"
+                        android:visibility="visible"
+                        app:indicatorColor="@color/colorAccent"
+                        app:indicatorName="BallClipRotateMultipleIndicator" />
+
+                    <ImageButton
+                        android:id="@+id/play"
+                        android:layout_width="@dimen/play_size"
+                        android:layout_height="@dimen/play_size"
+                        android:layout_gravity="center"
+                        android:background="@drawable/play_button"
+                        android:elevation="7dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/play"
+                        android:translationZ="2dp"
+                        android:visibility="visible" />
+
+                    <com.jassdev.apps.andrroider.uradio.Utils.CircularSeekBar
+                        android:id="@+id/volumeChanger"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:elevation="7dp"
+                        android:rotation="0"
+                        app:circle_color="@color/colorPrimary"
+                        app:circle_progress_color="#fff"
+                        app:circle_stroke_width="3dp"
+                        app:circle_x_radius="@dimen/volume_size"
+                        app:circle_y_radius="@dimen/volume_size"
+                        app:end_angle="180"
+                        app:max="100"
+                        app:pointer_alpha_ontouch="100"
+                        app:pointer_color="@color/colorPrimary"
+                        app:pointer_halo_color="@color/colorPrimary"
+                        app:pointer_halo_color_ontouch="#d50000"
+                        app:progress="30"
+                        app:start_angle="0"
+                        app:use_custom_radii="true" />
+
+                </FrameLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#000"
+            android:elevation="5dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/track_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:fontFamily="sans-serif_light"
+                    android:gravity="start|center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:maxLines="1"
+                    android:scrollHorizontally="true"
+                    android:text="Song..."
+                    android:textColor="#fff"
+                    android:textSize="@dimen/text_size"
+                    android:textStyle="normal|bold" />
+
+                <TextView
+                    android:id="@+id/artist_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="5dp"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:fontFamily="sans-serif-serif_light"
+                    android:gravity="start|center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:maxLines="1"
+                    android:scrollHorizontally="true"
+                    android:text="Artist..."
+                    android:textColor="#fff"
+                    android:textSize="@dimen/text_size"
+                    android:textStyle="normal|bold" />
+            </LinearLayout>
+
+            <com.wang.avi.AVLoadingIndicatorView
+                android:id="@+id/playing_anim"
+                style="@style/AVLoadingIndicatorView.Small"
+                android:layout_width="@dimen/indicator_size"
+                android:layout_height="@dimen/indicator_size"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:visibility="visible"
+                app:indicatorColor="@color/colorAccent"
+                app:indicatorName="LineScalePulseOutIndicator" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</layout>
