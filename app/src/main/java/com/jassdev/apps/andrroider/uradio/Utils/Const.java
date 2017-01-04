@@ -12,10 +12,13 @@ public class Const {
      */
 
 //    public static String RUS_RADIO_PATH = "http://icecast.russkoeradio.cdnvideo.ru/rr.mp3";
+    public static String RADIO_BASE_URL= "http://uradio.pro:8000";
 
     public static String RADIO_PATH = "http://uradio.pro:8000/liveHD";
 
-    public static int PHOTO_LOAD_REFRESH_TIME = 20000;
+    public static String RADIO_PATH_HQ = "http://uradio.pro:8000/liveHD";
+
+    public static int LOAD_REFRESH_TIME = 20;
 
     public static int VIBRATE_TIME = 5;
 
@@ -24,6 +27,7 @@ public class Const {
         String PLAY_ACTION = "com.jassdev.apps.andrroider.uradio.action.play";
         String STARTFOREGROUND_ACTION = "com.jassdev.apps.andrroider.uradio.action.startforeground";
         String STOPFOREGROUND_ACTION = "com.jassdev.apps.andrroider.uradio.action.stopforeground";
+        String BROADCAST_MANAGER_INTENT = "com.jassdev.apps.andrroider.uradio.action.updateNotification";
     }
     public static int FOREGROUND_SERVICE = 101;
 

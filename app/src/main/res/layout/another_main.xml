@@ -25,46 +25,31 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="50dp"
                     android:layout_marginStart="50dp">
-                    <include layout="@layout/fone_indicator" />
-                </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/artist_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="56dp"
-                    android:ellipsize="start"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:fontFamily="serif"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:maxLines="1"
-                    android:text="Oasis"
-                    android:textColor="@color/titleColor"
-                    android:textSize="@dimen/text_size"
-                    android:textStyle="bold" />
+                    <include
+                        android:id="@+id/icluddedAnim"
+                        layout="@layout/fone_indicator" />
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/track_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/artist_tv"
+                    android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="40dp"
-                    android:ellipsize="marquee"
+                    android:layout_marginTop="56dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:ellipsize="start"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
-                    android:fontFamily="sans"
+                    android:fontFamily="serif"
                     android:marqueeRepeatLimit="marquee_forever"
-                    android:maxLines="1"
-                    android:scrollHorizontally="true"
-                    android:text="I'm Outta Time"
+                    android:text="Много позитива и столько же музыки! "
+                    android:textAlignment="center"
                     android:textColor="@color/titleColor"
                     android:textSize="@dimen/text_size"
                     android:textStyle="bold" />
-
             </RelativeLayout>
 
 
@@ -120,7 +105,7 @@
                         app:pointer_alpha_ontouch="100"
                         app:pointer_color="@color/colorPrimary"
                         app:pointer_halo_color="@color/colorPrimary"
-                        app:pointer_halo_color_ontouch="#d50000"
+                        app:pointer_halo_color_ontouch="@color/indicatorColor"
                         app:progress="30"
                         app:start_angle="0"
                         app:use_custom_radii="true" />
@@ -137,7 +122,7 @@
                     android:src="@drawable/ic_high_quality" />
 
                 <ImageView
-                    android:id="@+id/imageView"
+                    android:id="@+id/volumeOff"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
                     android:layout_alignParentBottom="true"

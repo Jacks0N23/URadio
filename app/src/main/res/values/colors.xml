@@ -10,5 +10,6 @@
     <color name="indicatorColor">#ef5350</color>
 
     <color name="bottomBackgroundColor">#bdbdbd</color>
+    <color name="inactiveBtn">#9b9b9b</color>
 
 </resources>

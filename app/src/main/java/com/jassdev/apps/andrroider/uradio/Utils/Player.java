@@ -2,12 +2,15 @@ package com.jassdev.apps.andrroider.uradio.Utils;
 
 import android.content.Context;
 import android.net.Uri;
+import android.view.View;
 
 import com.google.android.exoplayer.ExoPlaybackException;
 import com.google.android.exoplayer.ExoPlayer;
 import com.google.android.exoplayer.FrameworkSampleSource;
 import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
 import com.google.android.exoplayer.TrackRenderer;
+import com.jassdev.apps.andrroider.uradio.MainActivity;
+import com.jassdev.apps.andrroider.uradio.R;
 
 /**
  * Created by Jackson on 30/12/2016.
@@ -18,14 +21,12 @@ public class Player {
     static ExoPlayer exoPlayer;
     static TrackRenderer audioRenderer;
 
-    public static void start(String URL, Context context)
-    {
-        if(exoPlayer!=null)
-        {
+    public static void start(String URL, Context context) {
+        if (exoPlayer != null) {
             exoPlayer.stop();
         }
         Uri URI = Uri.parse(URL);
-        FrameworkSampleSource sampleSource = new FrameworkSampleSource(context,URI, null);
+        FrameworkSampleSource sampleSource = new FrameworkSampleSource(context, URI, null);
         audioRenderer = new MediaCodecAudioTrackRenderer(sampleSource, null, true);
         exoPlayer = ExoPlayer.Factory.newInstance(1);
         exoPlayer.prepare(audioRenderer);
@@ -34,13 +35,20 @@ public class Player {
             @Override
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 // This state if player is ready to work and loaded all data
-//                if(playbackState == 4)
-//                {
-//                    MainActivity.playing_animation.setVisibility(View.VISIBLE);
-//                    MainActivity.loading_animation.setVisibility(View.GONE);
-//                    MainActivity.control_button.setVisibility(View.VISIBLE);
-//                    MainActivity.control_button.setImageResource(R.drawable.pause);
-//                }
+                if(playbackState == 2)
+                {
+                    MainActivity.playing_animation.setVisibility(View.VISIBLE);
+                    MainActivity.loading_animation.setVisibility(View.GONE);
+                    MainActivity.control_button.setVisibility(View.VISIBLE);
+                    MainActivity.control_button.setImageResource(R.drawable.pause);
+                }
+
+                else if (playbackState == 1) {
+                    MainActivity.playing_animation.setVisibility(View.GONE);
+                    MainActivity.loading_animation.setVisibility(View.GONE);
+                    MainActivity.control_button.setVisibility(View.VISIBLE);
+                    MainActivity.control_button.setImageResource(R.drawable.play);
+                }
             }
 
             @Override
@@ -55,16 +63,24 @@ public class Player {
         });
     }
 
-    public static void stop()
-    {
-        if(exoPlayer!=null) {
+    public static void stop() {
+        if (exoPlayer != null) {
             exoPlayer.stop();
         }
     }
 
-    public static void setVolume(float volume)
-    {
-        if(exoPlayer!= null) {
+    public static void setMute(boolean toMute) {
+        if (exoPlayer != null) {
+            if (toMute) {
+                exoPlayer.sendMessage(audioRenderer, MediaCodecAudioTrackRenderer.MSG_SET_VOLUME, 0f);
+            } else {
+                exoPlayer.sendMessage(audioRenderer, MediaCodecAudioTrackRenderer.MSG_SET_VOLUME, 1f);
+            }
+        }
+    }
+
+    public static void setVolume(float volume) {
+        if (exoPlayer != null) {
             exoPlayer.sendMessage(audioRenderer, MediaCodecAudioTrackRenderer.MSG_SET_VOLUME, volume);
         }
     }

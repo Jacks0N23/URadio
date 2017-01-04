@@ -39,12 +39,7 @@
                 android:paddingLeft="@dimen/status_bar_button_info_container_padding_left">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/titleColor"
-                    android:text="Artist"
-                    />
-                <TextView
+                    android:id="@+id/track_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/titleColor"

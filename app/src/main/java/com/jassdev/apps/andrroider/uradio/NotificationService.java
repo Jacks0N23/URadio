@@ -7,10 +7,14 @@ package com.jassdev.apps.andrroider.uradio;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import com.jassdev.apps.andrroider.uradio.Utils.Const;
@@ -19,9 +23,10 @@ import com.jassdev.apps.andrroider.uradio.Utils.Player;
 
 public class NotificationService extends Service {
 
-    public static Context context;
+    public String track = "";
     Notification status;
     boolean isPause = true;
+    BroadcastReceiver broadcastReceiver;
 
     private void showNotification(int pos) {
         RemoteViews views = new RemoteViews(getPackageName(),
@@ -49,6 +54,11 @@ public class NotificationService extends Service {
 
         views.setOnClickPendingIntent(R.id.status_bar_collapse, pcloseIntent);
 
+        if (track.isEmpty())
+            views.setTextViewText(R.id.track_tv, MainActivity.track);
+        else
+            views.setTextViewText(R.id.track_tv, track);
+
         if (pos == 0) {
             views.setImageViewResource(R.id.status_bar_play,
                     R.drawable.pause);
@@ -57,39 +67,39 @@ public class NotificationService extends Service {
         if (pos == 1) {
             views.setImageViewResource(R.id.status_bar_play,
                     R.drawable.pause);
-//            if (MainActivity.control_button != null) {
-//                MainActivity.control_button.setImageResource(R.drawable.play);
-//                MainActivity.playing_animation.setVisibility(View.GONE);
-//                MainActivity.loading_animation.setVisibility(View.VISIBLE);
-//                MainActivity.control_button.setVisibility(View.GONE);
+            if (MainActivity.control_button != null) {
+                MainActivity.control_button.setImageResource(R.drawable.play);
+                MainActivity.playing_animation.setVisibility(View.GONE);
+                MainActivity.loading_animation.setVisibility(View.VISIBLE);
+                MainActivity.control_button.setVisibility(View.GONE);
                 MainActivity.controlIsActivated = true;
-//            }
+            }
         }
         if (pos == 2) {
             views.setImageViewResource(R.id.status_bar_play,
                     R.drawable.play);
-//            if (MainActivity.control_button != null) {
-//                MainActivity.control_button.setImageResource(R.drawable.play);
-//                MainActivity.playing_animation.setVisibility(View.GONE);
-//                MainActivity.loading_animation.setVisibility(View.GONE);
-//                MainActivity.control_button.setVisibility(View.VISIBLE);
+            if (MainActivity.control_button != null) {
+                MainActivity.control_button.setImageResource(R.drawable.play);
+                MainActivity.playing_animation.setVisibility(View.GONE);
+                MainActivity.loading_animation.setVisibility(View.GONE);
+                MainActivity.control_button.setVisibility(View.VISIBLE);
                 MainActivity.controlIsActivated = false;
-//            }
+            }
         }
 
 // .setSmallIcon(R.mipmap.ic_logo) - почему-то без него не работает кастомный лэйаут
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                status = new Notification.Builder(this)
-                        .setCustomContentView(views)
-                        .setSmallIcon(R.mipmap.ic_logo)
-                        .build();
-            } else {
-                status = new Notification.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_logo)
-                        .build();
-                status.contentView = views;
-            }
+            status = new Notification.Builder(this)
+                    .setCustomContentView(views)
+                    .setSmallIcon(R.mipmap.ic_logo)
+                    .build();
+        } else {
+            status = new Notification.Builder(this)
+                    .setSmallIcon(R.mipmap.ic_logo)
+                    .build();
+            status.contentView = views;
+        }
         //закрепляет в штоке уведомление
         status.flags = Notification.FLAG_ONGOING_EVENT;
         status.contentIntent = pendingIntent;
@@ -99,6 +109,7 @@ public class NotificationService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(broadcastReceiver);
     }
 
     @Override
@@ -108,12 +119,27 @@ public class NotificationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent != null && intent.getStringExtra("TRACK") != null) {
+                    track = intent.getStringExtra("TRACK");
+                    showNotification(isPause ? 1 : 2);
+                }
+            }
+        };
+        IntentFilter filter = new IntentFilter(Const.ACTION.BROADCAST_MANAGER_INTENT);
 
-        context = this;
+        registerReceiver(broadcastReceiver, filter);
+
         if (intent.getAction().equals(Const.ACTION.STARTFOREGROUND_ACTION)) {
             isPause = false;
             showNotification(0);
-            Player.start(Const.RADIO_PATH, this);
+            if (MainActivity.isHQ)
+                Player.start(Const.RADIO_PATH_HQ, this);
+            else
+                Player.start(Const.RADIO_PATH, this);
+
         } else if (intent.getAction().equals(Const.ACTION.PLAY_ACTION)) {
             if (!isPause) {
                 showNotification(2);
@@ -122,17 +148,20 @@ public class NotificationService extends Service {
             } else {
                 showNotification(1);
                 isPause = false;
-                Player.start(Const.RADIO_PATH, this);
+                if (MainActivity.isHQ)
+                    Player.start(Const.RADIO_PATH_HQ, this);
+                else
+                    Player.start(Const.RADIO_PATH, this);
             }
         } else if (intent.getAction().equals(
                 Const.ACTION.STOPFOREGROUND_ACTION)) {
-//            if (MainActivity.control_button != null) {
-//                MainActivity.control_button.setImageResource(R.drawable.play);
-//                MainActivity.playing_animation.setVisibility(View.GONE);
-//                MainActivity.loading_animation.setVisibility(View.GONE);
-//                MainActivity.control_button.setVisibility(View.VISIBLE);
-//                MainActivity.controlIsActivated = false;
-//            }
+            if (MainActivity.control_button != null) {
+                MainActivity.control_button.setImageResource(R.drawable.play);
+                MainActivity.playing_animation.setVisibility(View.GONE);
+                MainActivity.loading_animation.setVisibility(View.GONE);
+                MainActivity.control_button.setVisibility(View.VISIBLE);
+                MainActivity.controlIsActivated = false;
+            }
             Player.stop();
             stopForeground(true);
             stopSelf();

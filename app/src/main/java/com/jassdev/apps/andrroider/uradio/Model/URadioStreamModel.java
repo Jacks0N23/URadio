@@ -14,9 +14,4 @@ public class URadioStreamModel {
     public Icestats getIcestats() {
         return icestats;
     }
-
-    public void setIcestats(Icestats icestats) {
-        this.icestats = icestats;
-    }
-
 }
