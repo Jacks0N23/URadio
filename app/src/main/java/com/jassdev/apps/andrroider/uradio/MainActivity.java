@@ -8,13 +8,12 @@ import android.os.Vibrator;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jassdev.apps.andrroider.uradio.Model.Source;
 import com.jassdev.apps.andrroider.uradio.Model.URadioStreamModel;
 import com.jassdev.apps.andrroider.uradio.Utils.CircularSeekBar;
 import com.jassdev.apps.andrroider.uradio.Utils.Const;
@@ -28,8 +27,6 @@ import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -47,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     MediaPlayer mMediaPlayer;
     private AnotherMainBinding binding;
 
-     //Strings for showing song data and detecting old album photo
+    //Strings for showing song data and detecting old album photo
     public static String track, genre; // жанр мб будет использоваться потом
 
     public static TextView track_tv;
@@ -64,6 +61,10 @@ public class MainActivity extends AppCompatActivity {
     public static boolean isHQ = true;
     public boolean mute = false;
     private URadioApi api;
+
+    private CompositeSubscription compositeSubscription = new CompositeSubscription();
+    private Subscriber<URadioStreamModel> subscriber;
+    private Observable<URadioStreamModel> observable;
 
 
     @Override
@@ -90,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         playing_animation.setVisibility(View.GONE);
         loading_animation = binding.loadAnimation;
         startListenVolume();
-        getTrackInfo();
 
         binding.highQuality.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,51 +106,73 @@ public class MainActivity extends AppCompatActivity {
                 setVolumeOff();
             }
         });
+
     }
 
 
     private void getTrackInfo() {
-        new CompositeSubscription().add(api
-                .getRadioInfo()
-//                .delay(15, TimeUnit.SECONDS, Schedulers.newThread())
-//                .repeat()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<URadioStreamModel>() {
-                    @Override
-                    public void onCompleted() {
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    Thread.sleep(15000);
-                                    getTrackInfo();
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                    }
+        getRequest().single().subscribe(getSubscriber());
+        compositeSubscription.add(subscriber);
+        Observable.timer(15, TimeUnit.SECONDS, Schedulers.io()).subscribe(new Subscriber<Long>() {
+            @Override
+            public void onCompleted() {
+            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, "onError: ", e);
-                        Toast.makeText(MainActivity.this, "Не удалось получить название трека, попробую ещё", Toast.LENGTH_LONG).show();
-                        getTrackInfo();
-                    }
+            @Override
+            public void onError(Throwable e) {
+            }
 
-                    @Override
-                    public void onNext(URadioStreamModel uRadioStreamModel) {
-                        track = uRadioStreamModel.getIcestats().getSource().get(0).getTitle();
-                        //небольшая оптимизация, чтобы мы обновляли тайтл только когда разные названия трека у нас и в ответе от сервера
-                        if (!track.equals(binding.trackTv.getText().toString())) {
-                            refreshNotification(track);
-                            binding.trackTv.setText(track);
-                        }
-                    }
-                }));
+            @Override
+            public void onNext(Long aLong) {
+                getTrackInfo();
+            }
+        });
     }
 
+    private Observable<URadioStreamModel> getRequest() {
+        if (observable == null) {
+            observable = api
+                    .getRadioInfo()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread());
+        }
+        return observable;
+    }
+
+    private Subscriber<URadioStreamModel> getSubscriber() {
+        subscriber = new Subscriber<URadioStreamModel>() {
+            @Override
+            public void onCompleted() {
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, "onError: ", e);
+                Toast.makeText(MainActivity.this, "Не удалось получить название трека, попробую ещё", Toast.LENGTH_LONG).show();
+                getTrackInfo();
+            }
+
+            @Override
+            public void onNext(URadioStreamModel uRadioStreamModel) {
+                track = searchTitleInList(uRadioStreamModel);
+                //небольшая оптимизация, чтобы мы обновляли тайтл только когда разные названия трека у нас и в ответе от сервера
+                if (track != null && !track.equals(binding.trackTv.getText().toString())) {
+                    refreshNotification(track);
+                    binding.trackTv.setText(track);
+                }
+            }
+        };
+        return subscriber;
+    }
+
+
+    private String searchTitleInList(URadioStreamModel uRadioStreamModel) {
+        for (Source source : uRadioStreamModel.getIcestats().getSource()) {
+            if (source.getTitle() != null)
+                return source.getTitle();
+        }
+        return null;
+    }
 
     private void refreshNotification(String track) {
         Intent broadcastIntent = new Intent();
@@ -162,7 +184,9 @@ public class MainActivity extends AppCompatActivity {
     private void togglePlayPause() {
         if (!controlIsActivated) {
             startPlayerService();
-            getTrackInfo();
+            //немного грязно, хотя работает отлично
+            if (observable == null)
+                getTrackInfo();
             binding.play.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.pause));
             controlIsActivated = true;
             vibrate();
@@ -185,8 +209,10 @@ public class MainActivity extends AppCompatActivity {
             isHQ = true;
         }
 
-        startPlayerService();
-        getTrackInfo();
+        //типо остановили руками
+        togglePlayPause();
+        //типо включили снова
+        togglePlayPause();
 
         binding.loadAnimation.setVisibility(View.VISIBLE);
     }
@@ -239,8 +265,17 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        getTrackInfo();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (compositeSubscription != null)
+            compositeSubscription.unsubscribe();
+
         if (mMediaPlayer != null) {
             if (mMediaPlayer.isPlaying()) {
                 mMediaPlayer.stop();

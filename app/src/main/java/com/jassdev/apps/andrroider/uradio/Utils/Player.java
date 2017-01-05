@@ -35,7 +35,7 @@ public class Player {
             @Override
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 // This state if player is ready to work and loaded all data
-                if(playbackState == 2)
+                if(playbackState == 4)
                 {
                     MainActivity.playing_animation.setVisibility(View.VISIBLE);
                     MainActivity.loading_animation.setVisibility(View.GONE);
