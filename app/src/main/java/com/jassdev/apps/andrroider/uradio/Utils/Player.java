@@ -35,15 +35,12 @@ public class Player {
             @Override
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 // This state if player is ready to work and loaded all data
-                if(playbackState == 4)
-                {
+                if (playbackState == 4) {
                     MainActivity.playing_animation.setVisibility(View.VISIBLE);
                     MainActivity.loading_animation.setVisibility(View.GONE);
                     MainActivity.control_button.setVisibility(View.VISIBLE);
                     MainActivity.control_button.setImageResource(R.drawable.pause);
-                }
-
-                else if (playbackState == 1) {
+                } else if (playbackState == 1) {
                     MainActivity.playing_animation.setVisibility(View.GONE);
                     MainActivity.loading_animation.setVisibility(View.GONE);
                     MainActivity.control_button.setVisibility(View.VISIBLE);
@@ -61,6 +58,13 @@ public class Player {
 
             }
         });
+    }
+
+    public static boolean isPlaing() {
+        if (exoPlayer != null && exoPlayer.getPlaybackState() > 1 && exoPlayer.getPlaybackState() < 5) {
+            return true;
+        }
+        return false;
     }
 
     public static void stop() {

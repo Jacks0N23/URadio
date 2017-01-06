@@ -124,7 +124,7 @@ public class NotificationService extends Service {
             public void onReceive(Context context, Intent intent) {
                 if (intent != null && intent.getStringExtra("TRACK") != null) {
                     track = intent.getStringExtra("TRACK");
-                    showNotification(isPause ? 1 : 2);
+                    showNotification(Player.isPlaing() ? 1 : 2);
                 }
             }
         };

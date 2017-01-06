@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean mute = false;
     private URadioApi api;
 
-    private CompositeSubscription compositeSubscription = new CompositeSubscription();
     private Subscriber<URadioStreamModel> subscriber;
     private Observable<URadioStreamModel> observable;
 
@@ -112,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void getTrackInfo() {
         getRequest().single().subscribe(getSubscriber());
-        compositeSubscription.add(subscriber);
         Observable.timer(15, TimeUnit.SECONDS, Schedulers.io()).subscribe(new Subscriber<Long>() {
             @Override
             public void onCompleted() {
@@ -273,8 +271,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (compositeSubscription != null)
-            compositeSubscription.unsubscribe();
 
         if (mMediaPlayer != null) {
             if (mMediaPlayer.isPlaying()) {
