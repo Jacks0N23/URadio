@@ -1,6 +1,6 @@
-package com.jassdev.apps.andrroider.uradio;
+package com.jassdev.apps.andrroider.uradio.Api;
 
-import com.jassdev.apps.andrroider.uradio.Model.URadioStreamModel;
+import com.jassdev.apps.andrroider.uradio.MainScreen.Model.URadioStreamModel;
 
 import retrofit2.http.GET;
 import rx.Observable;

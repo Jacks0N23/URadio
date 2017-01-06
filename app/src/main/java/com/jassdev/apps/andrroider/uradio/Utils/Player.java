@@ -9,7 +9,7 @@ import com.google.android.exoplayer.ExoPlayer;
 import com.google.android.exoplayer.FrameworkSampleSource;
 import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
 import com.google.android.exoplayer.TrackRenderer;
-import com.jassdev.apps.andrroider.uradio.MainActivity;
+import com.jassdev.apps.andrroider.uradio.MainScreen.View.MainView;
 import com.jassdev.apps.andrroider.uradio.R;
 
 /**
@@ -18,10 +18,15 @@ import com.jassdev.apps.andrroider.uradio.R;
 
 public class Player {
 
-    static ExoPlayer exoPlayer;
-    static TrackRenderer audioRenderer;
+    ExoPlayer exoPlayer;
+    TrackRenderer audioRenderer;
+    private MainView mView;
 
-    public static void start(String URL, Context context) {
+    public Player(MainView mView) {
+        this.mView = mView;
+    }
+
+    public void start(String URL, Context context) {
         if (exoPlayer != null) {
             exoPlayer.stop();
         }
@@ -35,16 +40,16 @@ public class Player {
             @Override
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 // This state if player is ready to work and loaded all data
-                if (playbackState == 4) {
-                    MainActivity.playing_animation.setVisibility(View.VISIBLE);
-                    MainActivity.loading_animation.setVisibility(View.GONE);
-                    MainActivity.control_button.setVisibility(View.VISIBLE);
-                    MainActivity.control_button.setImageResource(R.drawable.pause);
+                if (playbackState == 3) {
+                    mView.setVisibilityToLoadingAnimation(View.VISIBLE);
+                    mView.setVisibilityToLoadingAnimation(View.GONE);
+                    mView.setVisibilityToControlButton(View.VISIBLE);
+                    mView.setControlButtonImageResource(R.drawable.pause);
                 } else if (playbackState == 1) {
-                    MainActivity.playing_animation.setVisibility(View.GONE);
-                    MainActivity.loading_animation.setVisibility(View.GONE);
-                    MainActivity.control_button.setVisibility(View.VISIBLE);
-                    MainActivity.control_button.setImageResource(R.drawable.play);
+                    mView.setVisibilityToLoadingAnimation(View.GONE);
+                    mView.setVisibilityToLoadingAnimation(View.GONE);
+                     mView.setVisibilityToControlButton(View.VISIBLE);
+                     mView.setControlButtonImageResource(R.drawable.play);
                 }
             }
 
@@ -60,20 +65,20 @@ public class Player {
         });
     }
 
-    public static boolean isPlaing() {
+    public boolean isPlaying() {
         if (exoPlayer != null && exoPlayer.getPlaybackState() > 1 && exoPlayer.getPlaybackState() < 5) {
             return true;
         }
         return false;
     }
 
-    public static void stop() {
+    public void stop() {
         if (exoPlayer != null) {
             exoPlayer.stop();
         }
     }
 
-    public static void setMute(boolean toMute) {
+    public void setMute(boolean toMute) {
         if (exoPlayer != null) {
             if (toMute) {
                 exoPlayer.sendMessage(audioRenderer, MediaCodecAudioTrackRenderer.MSG_SET_VOLUME, 0f);
@@ -81,11 +86,9 @@ public class Player {
                 exoPlayer.sendMessage(audioRenderer, MediaCodecAudioTrackRenderer.MSG_SET_VOLUME, 1f);
             }
         }
-    }
 
-    public static void setVolume(float volume) {
-        if (exoPlayer != null) {
-            exoPlayer.sendMessage(audioRenderer, MediaCodecAudioTrackRenderer.MSG_SET_VOLUME, volume);
+        else {
+            mView.showToast("Нельзя выключить звук не включённого плеера");
         }
     }
 }

@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".MainScreen.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +23,7 @@
         </activity>
 
         <!--Service for player and notification-->
-        <service android:name=".NotificationService" />
+        <service android:name=".Service.NotificationService" />
     </application>
 
 </manifest>

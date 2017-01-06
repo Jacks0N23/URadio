@@ -22,7 +22,7 @@
     <dimen name="title_size">20sp</dimen>
     <dimen name="data_size">15sp</dimen>
 
-    <dimen name="text_size">36sp</dimen>
+    <dimen name="text_size">30sp</dimen>
     <dimen name="indicator_size">250dp</dimen>
     <dimen name="volume_size">130dp</dimen>
     <dimen name="volume_size_land">100dp</dimen>

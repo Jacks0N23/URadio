@@ -1,4 +1,4 @@
-package com.jassdev.apps.andrroider.uradio;
+package com.jassdev.apps.andrroider.uradio.Service;
 
 /**
  * Created by Jackson on 30/12/2016.
@@ -11,12 +11,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.IBinder;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import com.jassdev.apps.andrroider.uradio.MainScreen.MainActivity;
+import com.jassdev.apps.andrroider.uradio.MainScreen.View.MainView;
+import com.jassdev.apps.andrroider.uradio.R;
 import com.jassdev.apps.andrroider.uradio.Utils.Const;
 import com.jassdev.apps.andrroider.uradio.Utils.Player;
 
@@ -24,9 +27,19 @@ import com.jassdev.apps.andrroider.uradio.Utils.Player;
 public class NotificationService extends Service {
 
     public String track = "";
-    Notification status;
+    private Notification status;
     boolean isPause = true;
-    BroadcastReceiver broadcastReceiver;
+    private BroadcastReceiver broadcastReceiver;
+    private MainView mView;
+    private Player player;
+
+    public NotificationService() {
+    }
+
+    public NotificationService(MainView view) {
+        this.mView = view;
+        player = new Player(mView);
+    }
 
     private void showNotification(int pos) {
         RemoteViews views = new RemoteViews(getPackageName(),
@@ -55,7 +68,7 @@ public class NotificationService extends Service {
         views.setOnClickPendingIntent(R.id.status_bar_collapse, pcloseIntent);
 
         if (track.isEmpty())
-            views.setTextViewText(R.id.track_tv, MainActivity.track);
+            views.setTextViewText(R.id.track_tv, mView.getTrackTitle());
         else
             views.setTextViewText(R.id.track_tv, track);
 
@@ -67,23 +80,23 @@ public class NotificationService extends Service {
         if (pos == 1) {
             views.setImageViewResource(R.id.status_bar_play,
                     R.drawable.pause);
-            if (MainActivity.control_button != null) {
-                MainActivity.control_button.setImageResource(R.drawable.play);
-                MainActivity.playing_animation.setVisibility(View.GONE);
-                MainActivity.loading_animation.setVisibility(View.VISIBLE);
-                MainActivity.control_button.setVisibility(View.GONE);
-                MainActivity.controlIsActivated = true;
+            if (mView.getControlButton() != null) {
+                mView.setControlButtonImageResource(R.drawable.pause);
+                mView.setVisibilityToPlayingAnimation(View.GONE);
+                mView.setVisibilityToLoadingAnimation(View.VISIBLE);
+                mView.setVisibilityToControlButton(View.GONE);
+                mView.setIsControlActivated(true);
             }
         }
         if (pos == 2) {
             views.setImageViewResource(R.id.status_bar_play,
                     R.drawable.play);
-            if (MainActivity.control_button != null) {
-                MainActivity.control_button.setImageResource(R.drawable.play);
-                MainActivity.playing_animation.setVisibility(View.GONE);
-                MainActivity.loading_animation.setVisibility(View.GONE);
-                MainActivity.control_button.setVisibility(View.VISIBLE);
-                MainActivity.controlIsActivated = false;
+            if (mView.getControlButton() != null) {
+                mView.setControlButtonImageResource(R.drawable.play);
+                mView.setVisibilityToPlayingAnimation(View.GONE);
+                mView.setVisibilityToLoadingAnimation(View.GONE);
+                mView.setVisibilityToControlButton(View.VISIBLE);
+                mView.setIsControlActivated(false);
             }
         }
 
@@ -93,10 +106,12 @@ public class NotificationService extends Service {
             status = new Notification.Builder(this)
                     .setCustomContentView(views)
                     .setSmallIcon(R.mipmap.ic_logo)
+                    .setLargeIcon(BitmapFactory.decodeResource(null, R.mipmap.ic_launcher))
                     .build();
         } else {
             status = new Notification.Builder(this)
                     .setSmallIcon(R.mipmap.ic_logo)
+                    .setLargeIcon(BitmapFactory.decodeResource(null, R.mipmap.ic_launcher))
                     .build();
             status.contentView = views;
         }
@@ -114,17 +129,20 @@ public class NotificationService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
+
         return null;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent != null && intent.getStringExtra("TRACK") != null) {
                     track = intent.getStringExtra("TRACK");
-                    showNotification(Player.isPlaing() ? 1 : 2);
+                    showNotification(player.isPlaying() ? 0 : 2);
                 }
             }
         };
@@ -136,33 +154,33 @@ public class NotificationService extends Service {
             isPause = false;
             showNotification(0);
             if (MainActivity.isHQ)
-                Player.start(Const.RADIO_PATH_HQ, this);
+                player.start(Const.RADIO_PATH_HQ, this);
             else
-                Player.start(Const.RADIO_PATH, this);
+                player.start(Const.RADIO_PATH, this);
 
         } else if (intent.getAction().equals(Const.ACTION.PLAY_ACTION)) {
             if (!isPause) {
                 showNotification(2);
-                Player.stop();
+                player.stop();
                 isPause = true;
             } else {
                 showNotification(1);
                 isPause = false;
                 if (MainActivity.isHQ)
-                    Player.start(Const.RADIO_PATH_HQ, this);
+                    player.start(Const.RADIO_PATH_HQ, this);
                 else
-                    Player.start(Const.RADIO_PATH, this);
+                    player.start(Const.RADIO_PATH, this);
             }
         } else if (intent.getAction().equals(
                 Const.ACTION.STOPFOREGROUND_ACTION)) {
-            if (MainActivity.control_button != null) {
-                MainActivity.control_button.setImageResource(R.drawable.play);
-                MainActivity.playing_animation.setVisibility(View.GONE);
-                MainActivity.loading_animation.setVisibility(View.GONE);
-                MainActivity.control_button.setVisibility(View.VISIBLE);
-                MainActivity.controlIsActivated = false;
+            if (mView.getControlButton() != null) {
+                mView.setControlButtonImageResource(R.drawable.play);
+                mView.setVisibilityToPlayingAnimation(View.GONE);
+                mView.setVisibilityToLoadingAnimation(View.GONE);
+                mView.setVisibilityToControlButton(View.VISIBLE);
+                mView.setIsControlActivated(false);
             }
-            Player.stop();
+            player.stop();
             stopForeground(true);
             stopSelf();
         }

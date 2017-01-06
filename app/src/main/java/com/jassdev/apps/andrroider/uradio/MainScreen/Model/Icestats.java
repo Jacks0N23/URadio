@@ -1,5 +1,5 @@
 
-package com.jassdev.apps.andrroider.uradio.Model;
+package com.jassdev.apps.andrroider.uradio.MainScreen.Model;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;
