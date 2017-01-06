@@ -18,35 +18,36 @@ import com.jassdev.apps.andrroider.uradio.R;
 
 public class Player {
 
-    ExoPlayer exoPlayer;
-    TrackRenderer audioRenderer;
+    static ExoPlayer exoPlayer;
+    static TrackRenderer audioRenderer;
     private MainView mView;
 
-    public Player(MainView mView) {
+    public Player(MainView mView, String URL, Context context) {
         this.mView = mView;
-    }
-
-    public void start(String URL, Context context) {
-        if (exoPlayer != null) {
-            exoPlayer.stop();
-        }
         Uri URI = Uri.parse(URL);
         FrameworkSampleSource sampleSource = new FrameworkSampleSource(context, URI, null);
         audioRenderer = new MediaCodecAudioTrackRenderer(sampleSource, null, true);
         exoPlayer = ExoPlayer.Factory.newInstance(1);
+    }
+
+    public void start() {
+        if (exoPlayer != null) {
+            exoPlayer.stop();
+        }
+        assert exoPlayer != null;
         exoPlayer.prepare(audioRenderer);
         exoPlayer.setPlayWhenReady(true);
         exoPlayer.addListener(new ExoPlayer.Listener() {
             @Override
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 // This state if player is ready to work and loaded all data
-                if (playbackState == 3) {
-                    mView.setVisibilityToLoadingAnimation(View.VISIBLE);
+                if (playbackState == 4) {
+                    mView.setVisibilityToPlayingAnimation(View.VISIBLE);
                     mView.setVisibilityToLoadingAnimation(View.GONE);
                     mView.setVisibilityToControlButton(View.VISIBLE);
                     mView.setControlButtonImageResource(R.drawable.pause);
                 } else if (playbackState == 1) {
-                    mView.setVisibilityToLoadingAnimation(View.GONE);
+                    mView.setVisibilityToPlayingAnimation(View.GONE);
                     mView.setVisibilityToLoadingAnimation(View.GONE);
                      mView.setVisibilityToControlButton(View.VISIBLE);
                      mView.setControlButtonImageResource(R.drawable.play);

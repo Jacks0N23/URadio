@@ -23,6 +23,8 @@ import com.jassdev.apps.andrroider.uradio.R;
 import com.jassdev.apps.andrroider.uradio.Utils.Const;
 import com.jassdev.apps.andrroider.uradio.Utils.Player;
 
+import static com.jassdev.apps.andrroider.uradio.MainScreen.MainActivity.isHQ;
+
 
 public class NotificationService extends Service {
 
@@ -34,11 +36,11 @@ public class NotificationService extends Service {
     private Player player;
 
     public NotificationService() {
-    }
-
-    public NotificationService(MainView view) {
-        this.mView = view;
-        player = new Player(mView);
+        mView = BaseService.mView;
+        if (mView.isHQ())
+            player = new Player(mView, Const.RADIO_PATH_HQ, this);
+        else
+            player = new Player(mView, Const.RADIO_PATH, this);
     }
 
     private void showNotification(int pos) {
@@ -129,13 +131,11 @@ public class NotificationService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-
         return null;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
 
         broadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -153,10 +153,10 @@ public class NotificationService extends Service {
         if (intent.getAction().equals(Const.ACTION.STARTFOREGROUND_ACTION)) {
             isPause = false;
             showNotification(0);
-            if (MainActivity.isHQ)
-                player.start(Const.RADIO_PATH_HQ, this);
+            if (isHQ)
+                player.start();
             else
-                player.start(Const.RADIO_PATH, this);
+                player.start();
 
         } else if (intent.getAction().equals(Const.ACTION.PLAY_ACTION)) {
             if (!isPause) {
@@ -166,10 +166,7 @@ public class NotificationService extends Service {
             } else {
                 showNotification(1);
                 isPause = false;
-                if (MainActivity.isHQ)
-                    player.start(Const.RADIO_PATH_HQ, this);
-                else
-                    player.start(Const.RADIO_PATH, this);
+
             }
         } else if (intent.getAction().equals(
                 Const.ACTION.STOPFOREGROUND_ACTION)) {

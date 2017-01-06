@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.jassdev.apps.andrroider.uradio.MainScreen.Presenter.MainPresenter;
 import com.jassdev.apps.andrroider.uradio.MainScreen.View.MainView;
+import com.jassdev.apps.andrroider.uradio.Service.BaseService;
 import com.jassdev.apps.andrroider.uradio.Service.NotificationService;
 import com.jassdev.apps.andrroider.uradio.R;
 import com.jassdev.apps.andrroider.uradio.Utils.Const;
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
      */
 
     // Boolean for check if play/pause button is activated
-    static boolean controlIsActivated = false;
+    private boolean controlIsActivated = false;
     private AnotherMainBinding binding;
 
     public static boolean isHQ = true;
@@ -42,13 +43,13 @@ public class MainActivity extends AppCompatActivity implements MainView {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.another_main);
         presenter = new MainPresenter(this);
-        player = new Player(this);
+        player = new Player(this, Const.RADIO_PATH_HQ, this);
 
         binding.controlButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                binding.loadAnimation.setVisibility(View.VISIBLE);
-                binding.controlButton.setVisibility(View.GONE);
+//                binding.loadAnimation.setVisibility(View.VISIBLE);
+//                binding.controlButton.setVisibility(View.GONE);
                 togglePlayPause();
             }
         });
@@ -121,8 +122,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     // Service for background audio binding.playing
     public void startPlayerService() {
-        NotificationService service = new NotificationService(this);
-        Intent serviceIntent = new Intent(MainActivity.this, service.getClass());
+        BaseService service = new BaseService(this);
+        Intent serviceIntent = new Intent(MainActivity.this, NotificationService.class);
         serviceIntent.setAction(Const.ACTION.STARTFOREGROUND_ACTION);
         startService(serviceIntent);
     }
