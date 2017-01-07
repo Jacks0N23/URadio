@@ -2,6 +2,7 @@ package com.jassdev.apps.andrroider.uradio.Utils;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.exoplayer.ExoPlaybackException;
@@ -11,6 +12,8 @@ import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
 import com.google.android.exoplayer.TrackRenderer;
 import com.jassdev.apps.andrroider.uradio.MainScreen.View.MainView;
 import com.jassdev.apps.andrroider.uradio.R;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Jackson on 30/12/2016.
@@ -41,6 +44,7 @@ public class Player {
             @Override
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 // This state if player is ready to work and loaded all data
+                Log.d(TAG, "onPlayerStateChanged: "+ playbackState);
                 if (playbackState == 4) {
                     mView.setVisibilityToPlayingAnimation(View.VISIBLE);
                     mView.setVisibilityToLoadingAnimation(View.GONE);
@@ -61,7 +65,7 @@ public class Player {
 
             @Override
             public void onPlayerError(ExoPlaybackException error) {
-
+                Log.e(TAG, "onPlayerError: ", error);
             }
         });
     }

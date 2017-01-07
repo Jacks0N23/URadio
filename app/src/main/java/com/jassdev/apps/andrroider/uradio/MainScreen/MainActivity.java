@@ -48,14 +48,13 @@ public class MainActivity extends AppCompatActivity implements MainView {
         binding.controlButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                binding.loadAnimation.setVisibility(View.VISIBLE);
-//                binding.controlButton.setVisibility(View.GONE);
+                binding.loadAnimation.setVisibility(View.VISIBLE);
+                binding.controlButton.setVisibility(View.GONE);
                 togglePlayPause();
             }
         });
 
         binding.playingAnim.setVisibility(View.GONE);
-        binding.playingAnim.animateBars();
 
         binding.highQuality.setOnClickListener(new View.OnClickListener() {
             @Override
