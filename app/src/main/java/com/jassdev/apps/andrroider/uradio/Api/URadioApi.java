@@ -1,6 +1,6 @@
 package com.jassdev.apps.andrroider.uradio.Api;
 
-import com.jassdev.apps.andrroider.uradio.MainScreen.Model.URadioStreamModel;
+import com.jassdev.apps.andrroider.uradio.Radio.Model.URadioStreamModel;
 
 import retrofit2.http.GET;
 import rx.Observable;
@@ -10,7 +10,6 @@ import rx.Observable;
  */
 
 public interface URadioApi {
-
-    @GET("/status-json.xsl")
+    @GET("/uradio.xsl")
     Observable<URadioStreamModel> getRadioInfo();
 }

@@ -1,27 +1,33 @@
-package com.jassdev.apps.andrroider.uradio.MainScreen;
+package com.jassdev.apps.andrroider.uradio.Radio;
 
+import android.app.Fragment;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.jassdev.apps.andrroider.uradio.MainScreen.Presenter.MainPresenter;
-import com.jassdev.apps.andrroider.uradio.MainScreen.View.MainView;
+import com.jassdev.apps.andrroider.uradio.R;
+import com.jassdev.apps.andrroider.uradio.Radio.Presenter.RadioPresenter;
+import com.jassdev.apps.andrroider.uradio.Radio.View.MainView;
 import com.jassdev.apps.andrroider.uradio.Service.BaseService;
 import com.jassdev.apps.andrroider.uradio.Service.NotificationService;
-import com.jassdev.apps.andrroider.uradio.R;
 import com.jassdev.apps.andrroider.uradio.Utils.Const;
 import com.jassdev.apps.andrroider.uradio.Utils.Player;
-import com.jassdev.apps.andrroider.uradio.databinding.AnotherMainBinding;
+import com.jassdev.apps.andrroider.uradio.databinding.FragmentRadioBinding;
 
-public class MainActivity extends AppCompatActivity implements MainView {
+import static android.content.Context.VIBRATOR_SERVICE;
 
-    private final String TAG = "MainActivity";
+/**
+ * Created by Jackson on 15/01/2017.
+ */
+
+public class RadioFragment extends Fragment implements MainView {
 
     /**
      * https://bitbucket.org/mrcpp/rapliveradio/src/7548be6d5b6b9330421e91f756150099d06b0c3d/app/src/main/java/radio/raplive/ru/rapliveradio/ActivityMain.java?at=master&fileviewer=file-view-default
@@ -30,20 +36,22 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     // Boolean for check if play/pause button is activated
     private boolean controlIsActivated = false;
-    private AnotherMainBinding binding;
-
     public static boolean isHQ = true;
-    public boolean mute = false;
-
-    private MainPresenter presenter;
+    private FragmentRadioBinding binding;
+    private RadioPresenter presenter;
     private Player player;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.another_main);
-        presenter = new MainPresenter(this);
-        player = new Player(this, Const.RADIO_PATH_HQ, this);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentRadioBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        presenter = new RadioPresenter(this);
+        player = new Player(this, Const.RADIO_PATH_HQ, getActivity());
 
         binding.controlButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,8 +62,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
             }
         });
 
-        binding.playingAnim.setVisibility(View.GONE);
-
         binding.highQuality.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,14 +69,20 @@ public class MainActivity extends AppCompatActivity implements MainView {
             }
         });
 
-        binding.volumeOff.setImageAlpha(150);
-        binding.volumeOff.setOnClickListener(new View.OnClickListener() {
+        binding.share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setVolumeOff();
+                if (!getTrackTitle().equals(getString(R.string.too_many_positive))) {
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, getTrackTitle() + "\n На " + Const.RADIO_BASE_URL_FOR_SHARE);
+                    sendIntent.setType("text/plain");
+                    startActivity(Intent.createChooser(sendIntent, "Поделиться треком:"));
+                } else {
+                    showToast("Откуда мне знать, что играет, если радио выключено?");
+                }
             }
         });
-
     }
 
     private void togglePlayPause() {
@@ -78,14 +90,13 @@ public class MainActivity extends AppCompatActivity implements MainView {
             startPlayerService();
             setIsControlActivated(true);
             presenter.getTrackInfo();
-            binding.controlButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.pause));
+            binding.controlButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.pause));
             vibrate();
         } else {
             player.stop();
             setIsControlActivated(false);
             refreshNotification();
-            binding.controlButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.play));
-            setVisibilityToPlayingAnimation(View.GONE);
+            binding.controlButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.play));
             vibrate();
         }
     }
@@ -107,29 +118,17 @@ public class MainActivity extends AppCompatActivity implements MainView {
         setVisibilityToLoadingAnimation(View.VISIBLE);
     }
 
-    private void setVolumeOff() {
-        if (mute) {
-            player.setMute(true);
-            binding.volumeOff.setImageAlpha(255);
-            mute = false;
-        } else {
-            player.setMute(false);
-            binding.volumeOff.setImageAlpha(150);
-            mute = true;
-        }
-    }
-
     // Service for background audio binding.playing
     public void startPlayerService() {
-        BaseService service = new BaseService(this);
-        Intent serviceIntent = new Intent(MainActivity.this, NotificationService.class);
+        new BaseService(this); // just for working service with mvp
+        Intent serviceIntent = new Intent(getActivity(), NotificationService.class);
         serviceIntent.setAction(Const.ACTION.STARTFOREGROUND_ACTION);
-        startService(serviceIntent);
+        getActivity().startService(serviceIntent);
     }
 
     // Vibrate when click on control button
     public void vibrate() {
-        ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(Const.VIBRATE_TIME);
+        ((Vibrator) getActivity().getSystemService(VIBRATOR_SERVICE)).vibrate(Const.VIBRATE_TIME);
     }
 
     @Override
@@ -158,11 +157,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     @Override
-    public void setVisibilityToPlayingAnimation(int visibility) {
-        binding.playingAnim.setVisibility(visibility);
-    }
-
-    @Override
     public void setVisibilityToControlButton(int visibility) {
         binding.controlButton.setVisibility(visibility);
     }
@@ -177,12 +171,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction(Const.ACTION.BROADCAST_MANAGER_INTENT);
         broadcastIntent.putExtra("TRACK", getTrackTitle());
-        sendBroadcast(broadcastIntent);
+        getActivity().sendBroadcast(broadcastIntent);
     }
 
     @Override
     public void showToast(String text) {
-        Toast.makeText(MainActivity.this, text, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -192,6 +186,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public void setTrackTitle(String track) {
-        binding.trackTv.setText(getString(R.string.now_playing, track));
+        if (!isDetached())
+            binding.trackTv.setText(getString(R.string.now_playing, track));
     }
 }

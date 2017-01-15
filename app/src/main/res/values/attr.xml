@@ -25,4 +25,5 @@
         <attr name="circle_fill" format="color"/>
     </declare-styleable>
 
+    <attr name="toolbarColor" format="color" />
 </resources>

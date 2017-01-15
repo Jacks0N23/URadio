@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.55"
+            android:background="@color/main_bg">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_above="@+id/track_tv"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="10dp"
+                android:foregroundGravity="center"
+                android:src="@drawable/nav_drawer_header" />
+
+            <TextView
+                android:id="@+id/track_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="9dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:ellipsize="start"
+                android:text="@string/too_many_positive"
+                android:textColor="@color/titleColor"
+                android:textSize="@dimen/text_size"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.45"
+            android:background="@drawable/main_background_gradient">
+
+            <RelativeLayout
+                android:id="@+id/frameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentTop="true">
+
+                <com.wang.avi.AVLoadingIndicatorView
+                    android:id="@+id/load_animation"
+                    style="@style/AVLoadingIndicatorView.Small"
+                    android:layout_width="@dimen/play_size"
+                    android:layout_height="@dimen/play_size"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="50dp"
+                    android:background="@drawable/play_button"
+                    android:visibility="visible"
+                    app:indicatorColor="@color/colorAccent"
+                    app:indicatorName="BallClipRotateMultipleIndicator" />
+
+                <ImageButton
+                    android:id="@+id/controlButton"
+                    android:layout_width="@dimen/play_size"
+                    android:layout_height="@dimen/play_size"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="50dp"
+                    android:background="@drawable/play_button"
+                    android:elevation="7dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/play"
+                    android:translationZ="2dp"
+                    android:visibility="visible" />
+
+                 <View
+                     android:id="@+id/dummyView"
+                     android:layout_width="@dimen/play_size"
+                     android:layout_height="@dimen/play_size"
+                     android:layout_centerHorizontal="true"
+                     android:layout_marginTop="50dp"
+                     android:visibility="invisible"/>
+                <ImageView
+                    android:id="@+id/thumbDown"
+                    android:layout_width="84dp"
+                    android:layout_height="70dp"
+                    android:layout_alignTop="@+id/dummyView"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_toLeftOf="@+id/dummyView"
+                    android:layout_toStartOf="@+id/dummyView"
+                    android:src="@drawable/ic_thumb_down" />
+
+                <ImageView
+                    android:id="@+id/thumbUp"
+                    android:layout_width="84dp"
+                    android:layout_height="70dp"
+                    android:layout_alignBottom="@+id/dummyView"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_toEndOf="@+id/dummyView"
+                    android:layout_toRightOf="@+id/dummyView"
+                    android:src="@drawable/ic_thumb_up" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/high_quality"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/ic_high_quality" />
+
+            <ImageView
+                android:id="@+id/share"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/ic_share" />
+        </RelativeLayout>
+    </LinearLayout>
+</layout>

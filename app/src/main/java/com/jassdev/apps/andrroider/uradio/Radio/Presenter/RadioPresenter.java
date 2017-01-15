@@ -1,14 +1,10 @@
-package com.jassdev.apps.andrroider.uradio.MainScreen.Presenter;
+package com.jassdev.apps.andrroider.uradio.Radio.Presenter;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import com.jassdev.apps.andrroider.uradio.Api.URadioApi;
-import com.jassdev.apps.andrroider.uradio.MainScreen.MainActivity;
-import com.jassdev.apps.andrroider.uradio.MainScreen.Model.Source;
-import com.jassdev.apps.andrroider.uradio.MainScreen.Model.URadioStreamModel;
-import com.jassdev.apps.andrroider.uradio.MainScreen.View.MainView;
-import com.jassdev.apps.andrroider.uradio.R;
+import com.jassdev.apps.andrroider.uradio.Radio.Model.URadioStreamModel;
+import com.jassdev.apps.andrroider.uradio.Radio.View.MainView;
 import com.jassdev.apps.andrroider.uradio.Utils.Const;
 import com.jassdev.apps.andrroider.uradio.Utils.Utils;
 
@@ -23,16 +19,16 @@ import rx.schedulers.Schedulers;
  * Created by Jackson on 06/01/2017.
  */
 
-public class MainPresenter implements Presenter {
+public class RadioPresenter implements Presenter {
 
-    private static final String TAG = "MainPresenter";
+    private static final String TAG = "RadioPresenter";
     private MainView mView;
     private URadioApi api;
     private Observable<URadioStreamModel> observable;
     private String track;
 
 
-    public MainPresenter(MainView mView) {
+    public RadioPresenter(MainView mView) {
         this.mView = mView;
         api = Utils.createRxService(URadioApi.class, Const.RADIO_BASE_URL, true);
     }
@@ -41,7 +37,7 @@ public class MainPresenter implements Presenter {
     public void getTrackInfo() {
         if (mView.isControlActivated()) {
             getRequest().single().subscribe(getSubscriber());
-            Observable.timer(15, TimeUnit.SECONDS, Schedulers.io()).subscribe(new Subscriber<Long>() {
+            Observable.timer(Const.LOAD_REFRESH_TIME, TimeUnit.SECONDS, Schedulers.io()).subscribe(new Subscriber<Long>() {
                 @Override
                 public void onCompleted() {
                 }
@@ -77,8 +73,7 @@ public class MainPresenter implements Presenter {
             @Override
             public void onError(Throwable e) {
                 Log.e(TAG, "onError: ", e);
-                mView.showToast("Не удалось получить название трека, попробую ещё");
-                getTrackInfo();
+                mView.showToast("Не удалось получить название трека");
             }
 
             @Override
@@ -95,11 +90,12 @@ public class MainPresenter implements Presenter {
 
 
     private String searchTitleInList(URadioStreamModel uRadioStreamModel) {
-        for (Source source : uRadioStreamModel.getIcestats().getSource()) {
-            if (source.getTitle() != null)
-                return source.getTitle();
-        }
-        return null;
+        if (uRadioStreamModel.getNonstop().getTitle() != null)
+            return uRadioStreamModel.getNonstop().getTitle();
+        else if (uRadioStreamModel.getLive().getTitle() != null)
+            return uRadioStreamModel.getLive().getTitle();
+        else
+            return null;
     }
 
 }

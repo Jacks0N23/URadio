@@ -17,13 +17,11 @@ import android.os.IBinder;
 import android.view.View;
 import android.widget.RemoteViews;
 
-import com.jassdev.apps.andrroider.uradio.MainScreen.MainActivity;
-import com.jassdev.apps.andrroider.uradio.MainScreen.View.MainView;
+import com.jassdev.apps.andrroider.uradio.MainActivity;
 import com.jassdev.apps.andrroider.uradio.R;
+import com.jassdev.apps.andrroider.uradio.Radio.View.MainView;
 import com.jassdev.apps.andrroider.uradio.Utils.Const;
 import com.jassdev.apps.andrroider.uradio.Utils.Player;
-
-import static com.jassdev.apps.andrroider.uradio.MainScreen.MainActivity.isHQ;
 
 
 public class NotificationService extends Service {
@@ -84,7 +82,6 @@ public class NotificationService extends Service {
                     R.drawable.pause);
             if (mView.getControlButton() != null) {
                 mView.setControlButtonImageResource(R.drawable.pause);
-                mView.setVisibilityToPlayingAnimation(View.GONE);
                 mView.setVisibilityToLoadingAnimation(View.VISIBLE);
                 mView.setVisibilityToControlButton(View.GONE);
                 mView.setIsControlActivated(true);
@@ -95,7 +92,6 @@ public class NotificationService extends Service {
                     R.drawable.play);
             if (mView.getControlButton() != null) {
                 mView.setControlButtonImageResource(R.drawable.play);
-                mView.setVisibilityToPlayingAnimation(View.GONE);
                 mView.setVisibilityToLoadingAnimation(View.GONE);
                 mView.setVisibilityToControlButton(View.VISIBLE);
                 mView.setIsControlActivated(false);
@@ -153,10 +149,14 @@ public class NotificationService extends Service {
         if (intent.getAction().equals(Const.ACTION.STARTFOREGROUND_ACTION)) {
             isPause = false;
             showNotification(0);
-            if (isHQ)
+            if (mView.isHQ()) {
+                player = new Player(mView, Const.RADIO_PATH_HQ, this);
                 player.start();
-            else
+            }
+            else {
+                player = new Player(mView, Const.RADIO_PATH, this);
                 player.start();
+            }
 
         } else if (intent.getAction().equals(Const.ACTION.PLAY_ACTION)) {
             if (!isPause) {
@@ -172,7 +172,6 @@ public class NotificationService extends Service {
                 Const.ACTION.STOPFOREGROUND_ACTION)) {
             if (mView.getControlButton() != null) {
                 mView.setControlButtonImageResource(R.drawable.play);
-                mView.setVisibilityToPlayingAnimation(View.GONE);
                 mView.setVisibilityToLoadingAnimation(View.GONE);
                 mView.setVisibilityToControlButton(View.VISIBLE);
                 mView.setIsControlActivated(false);

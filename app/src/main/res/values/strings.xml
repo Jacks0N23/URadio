@@ -1,15 +1,25 @@
 <resources>
     <string name="app_name">URadio</string>
-    <string name="action_settings">Settings</string>
 
 
     <string name="app_version_number">1.0</string>
-    <string name="menu_settings">Settings</string>
 
     <string name="cd_repeat">Repeat one or all</string>
     <string name="cd_previous">Skip backwards</string>
     <string name="cd_play">Play and pause</string>
     <string name="cd_next">Skip forwards</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+    <string name="too_many_positive">Много позитива и столько же музыки!</string>
+    <string name="now_playing">В ЭФИРЕ:\n%s</string>
 
-    <string name="now_playing">Сейчас в эфире:\n%s</string>
+
+
+    <!--Navigation drawer-->
+    <string name="menu_chat">Чат</string>
+    <string name="menu_now_on_site">Сейчас на сайте</string>
+    <string name="menu_radio">Радио</string>
+    <string name="menu_playlist">Плейлист</string>
+    <string name="menu_settings">Настройки</string>
+
 </resources>

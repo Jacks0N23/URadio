@@ -1,128 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:vumeter="http://schemas.android.com/apk/res-auto">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
-        android:id="@+id/activity_main"
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/nav_drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:fitsSystemWindows="true"
+        tools:openDrawer="start">
 
-        <LinearLayout
+        <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:weightSum="1">
+            android:fitsSystemWindows="true"
+            android:orientation="vertical">
 
             <RelativeLayout
+                android:id="@+id/activity_main"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.6"
-                android:background="@drawable/main_background_gradient">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginEnd="20dp">
-
-                    <io.gresse.hugo.vumeterlibrary.VuMeterView
-                        android:id="@+id/playingAnim"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingBottom="4dp"
-                        vumeter:vumeter_stopSize="5dp"
-                        vumeter:vumeter_speed="35"
-                        vumeter:vumeter_blockNumber="10"
-                        vumeter:vumeter_blockSpacing="10dp"
-                        vumeter:vumeter_backgroundColor="@color/indicatorColor"
-                        vumeter:vumeter_startOff="false"/>
-
-                </RelativeLayout>
-
-                <TextView
-                    android:id="@+id/track_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="66dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:ellipsize="start"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:text="Много позитива и столько же музыки! "
-                    android:textAlignment="center"
-                    android:textColor="@color/titleColor"
-                    android:textSize="@dimen/text_size"
-                    android:textStyle="bold" />
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.4"
-                android:background="@color/notificationColor">
-
-                <FrameLayout
-                    android:id="@+id/frameLayout"
+                <android.support.design.widget.AppBarLayout
+                    android:id="@+id/appbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentTop="true">
+                    android:background="@color/toolbarColor">
 
-                    <com.wang.avi.AVLoadingIndicatorView
-                        android:id="@+id/load_animation"
-                        style="@style/AVLoadingIndicatorView.Small"
-                        android:layout_width="@dimen/play_size"
-                        android:layout_height="@dimen/play_size"
-                        android:layout_gravity="center"
-                        android:background="@drawable/play_button"
-                        android:visibility="visible"
-                        app:indicatorColor="@color/colorAccent"
-                        app:indicatorName="BallClipRotateMultipleIndicator" />
+                    <android.support.v7.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        app:titleTextColor="@color/titleColor"/>
 
-                    <ImageButton
-                        android:id="@+id/controlButton"
-                        android:layout_width="@dimen/play_size"
-                        android:layout_height="@dimen/play_size"
-                        android:layout_gravity="center"
-                        android:background="@drawable/play_button"
-                        android:elevation="7dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/play"
-                        android:translationZ="2dp"
-                        android:visibility="visible" />
-                </FrameLayout>
+                </android.support.design.widget.AppBarLayout>
 
-                <ImageView
-                    android:id="@+id/high_quality"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginStart="10dp"
-                    android:src="@drawable/ic_high_quality" />
-
-                <ImageView
-                    android:id="@+id/volumeOff"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginRight="10dp"
-                    android:src="@drawable/ic_volume_off" />
+                <FrameLayout
+                    android:id="@+id/container_main"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/appbar"
+                    android:background="?android:attr/colorBackground"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
             </RelativeLayout>
-        </LinearLayout>
-    </RelativeLayout>
+        </android.support.design.widget.CoordinatorLayout>
+
+            <android.support.design.widget.NavigationView
+                android:id="@+id/navigation_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start">
+
+                <android.support.design.widget.NavigationView
+                    android:id="@+id/navView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:layout_marginTop="30dp"
+                    app:headerLayout="@layout/nav_header_main"
+                    app:itemTextColor="?android:attr/textColorPrimary"
+                    app:menu="@menu/activity_main_drawer" />
+
+                <android.support.design.widget.NavigationView
+                    android:id="@+id/navViewBottom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:background="?android:attr/colorBackground"
+                    app:itemTextColor="?android:attr/textColorPrimary"
+                    app:menu="@menu/drawer_bottom_menu" />
+            </android.support.design.widget.NavigationView>
+    </android.support.v4.widget.DrawerLayout>
 </layout>

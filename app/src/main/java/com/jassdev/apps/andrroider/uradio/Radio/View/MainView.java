@@ -1,4 +1,4 @@
-package com.jassdev.apps.andrroider.uradio.MainScreen.View;
+package com.jassdev.apps.andrroider.uradio.Radio.View;
 
 
 import android.widget.ImageButton;
@@ -18,8 +18,6 @@ public interface MainView {
     boolean isHQ();
 
     void setVisibilityToLoadingAnimation(int visibility);
-
-    void setVisibilityToPlayingAnimation(int visibility);
 
     void setVisibilityToControlButton(int visibility);
 

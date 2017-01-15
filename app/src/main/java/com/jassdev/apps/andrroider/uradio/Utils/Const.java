@@ -14,11 +14,14 @@ public class Const {
 //    public static String RUS_RADIO_PATH = "http://icecast.russkoeradio.cdnvideo.ru/rr.mp3";
     public static String RADIO_BASE_URL= "http://uradio.pro:8000";
 
-    public static String RADIO_PATH = "http://uradio.pro:8000/liveHD";
+    public static String RADIO_BASE_URL_FOR_SHARE= "http://uradio.pro";
+
+
+    public static String RADIO_PATH = "http://uradio.pro:8000/live";
 
     public static String RADIO_PATH_HQ = "http://uradio.pro:8000/liveHD";
 
-    public static int LOAD_REFRESH_TIME = 20;
+    public static int LOAD_REFRESH_TIME = 15;
 
     public static int VIBRATE_TIME = 5;
 

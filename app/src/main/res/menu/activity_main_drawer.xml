@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/chat"
+        android:icon="@drawable/ic_chat"
+        android:title="@string/menu_chat" />
+
+    <item
+        android:id="@+id/now_on_site"
+        android:icon="@drawable/ic_now_on_site"
+        android:title="@string/menu_now_on_site" />
+
+    <item
+        android:id="@+id/radio"
+        android:icon="@drawable/ic_radio_temp"
+        android:title="@string/menu_radio" />
+
+    <item
+        android:id="@+id/playlist"
+        android:icon="@drawable/ic_playlist"
+        android:title="@string/menu_playlist" />
+</menu>

@@ -10,8 +10,8 @@ import com.google.android.exoplayer.ExoPlayer;
 import com.google.android.exoplayer.FrameworkSampleSource;
 import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
 import com.google.android.exoplayer.TrackRenderer;
-import com.jassdev.apps.andrroider.uradio.MainScreen.View.MainView;
 import com.jassdev.apps.andrroider.uradio.R;
+import com.jassdev.apps.andrroider.uradio.Radio.View.MainView;
 
 import static android.content.ContentValues.TAG;
 
@@ -29,15 +29,13 @@ public class Player {
         this.mView = mView;
         Uri URI = Uri.parse(URL);
         FrameworkSampleSource sampleSource = new FrameworkSampleSource(context, URI, null);
+        exoPlayer.release();
         audioRenderer = new MediaCodecAudioTrackRenderer(sampleSource, null, true);
         exoPlayer = ExoPlayer.Factory.newInstance(1);
     }
 
     public void start() {
-        if (exoPlayer != null) {
-            exoPlayer.stop();
-        }
-        assert exoPlayer != null;
+        stop();
         exoPlayer.prepare(audioRenderer);
         exoPlayer.setPlayWhenReady(true);
         exoPlayer.addListener(new ExoPlayer.Listener() {
@@ -45,13 +43,11 @@ public class Player {
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 // This state if player is ready to work and loaded all data
                 Log.d(TAG, "onPlayerStateChanged: "+ playbackState);
-                if (playbackState == 4) {
-                    mView.setVisibilityToPlayingAnimation(View.VISIBLE);
+                if (playbackState == 3) {
                     mView.setVisibilityToLoadingAnimation(View.GONE);
                     mView.setVisibilityToControlButton(View.VISIBLE);
                     mView.setControlButtonImageResource(R.drawable.pause);
                 } else if (playbackState == 1) {
-                    mView.setVisibilityToPlayingAnimation(View.GONE);
                     mView.setVisibilityToLoadingAnimation(View.GONE);
                      mView.setVisibilityToControlButton(View.VISIBLE);
                      mView.setControlButtonImageResource(R.drawable.play);
@@ -71,29 +67,12 @@ public class Player {
     }
 
     public boolean isPlaying() {
-        if (exoPlayer != null && exoPlayer.getPlaybackState() > 1 && exoPlayer.getPlaybackState() < 5) {
-            return true;
-        }
-        return false;
+        return exoPlayer != null && exoPlayer.getPlaybackState() > 1 && exoPlayer.getPlaybackState() < 5;
     }
 
     public void stop() {
         if (exoPlayer != null) {
             exoPlayer.stop();
-        }
-    }
-
-    public void setMute(boolean toMute) {
-        if (exoPlayer != null) {
-            if (toMute) {
-                exoPlayer.sendMessage(audioRenderer, MediaCodecAudioTrackRenderer.MSG_SET_VOLUME, 0f);
-            } else {
-                exoPlayer.sendMessage(audioRenderer, MediaCodecAudioTrackRenderer.MSG_SET_VOLUME, 1f);
-            }
-        }
-
-        else {
-            mView.showToast("Нельзя выключить звук не включённого плеера");
         }
     }
 }
