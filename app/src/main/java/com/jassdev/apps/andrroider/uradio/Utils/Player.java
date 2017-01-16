@@ -29,7 +29,7 @@ public class Player {
         this.mView = mView;
         Uri URI = Uri.parse(URL);
         FrameworkSampleSource sampleSource = new FrameworkSampleSource(context, URI, null);
-        exoPlayer.release();
+        release();
         audioRenderer = new MediaCodecAudioTrackRenderer(sampleSource, null, true);
         exoPlayer = ExoPlayer.Factory.newInstance(1);
     }
@@ -73,6 +73,12 @@ public class Player {
     public void stop() {
         if (exoPlayer != null) {
             exoPlayer.stop();
+        }
+    }
+
+    public void release() {
+        if (exoPlayer != null) {
+            exoPlayer.release();
         }
     }
 }
