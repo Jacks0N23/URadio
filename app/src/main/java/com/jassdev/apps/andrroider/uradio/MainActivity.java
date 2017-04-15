@@ -12,10 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.jassdev.apps.andrroider.uradio.Chat.ChatFragment;
-import com.jassdev.apps.andrroider.uradio.NowOnSite.NowOnSiteFragment;
-import com.jassdev.apps.andrroider.uradio.Playlist.PlaylistFragment;
 import com.jassdev.apps.andrroider.uradio.Radio.RadioFragment;
-import com.jassdev.apps.andrroider.uradio.Settings.SettingsFragment;
 import com.jassdev.apps.andrroider.uradio.Utils.Utils;
 import com.jassdev.apps.andrroider.uradio.databinding.AnotherMainBinding;
 
@@ -77,12 +74,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 mTitle = getString(R.string.menu_chat);
                 if (!Utils.isOnline(this)) initInternetConnectionDialog(this);
                 break;
-            case R.id.now_on_site:
-                fragment = new NowOnSiteFragment();
-                getSupportActionBar().setTitle(getString(R.string.menu_now_on_site));
-                mTitle = getString(R.string.menu_now_on_site);
-                if (!Utils.isOnline(this)) initInternetConnectionDialog(this);
-                break;
+//            case R.id.now_on_site:
+//                fragment = new NowOnSiteFragment();
+//                getSupportActionBar().setTitle(getString(R.string.menu_now_on_site));
+//                mTitle = getString(R.string.menu_now_on_site);
+//                if (!Utils.isOnline(this)) initInternetConnectionDialog(this);
+//                break;
             case R.id.radio:
                 fragment = RadioFragment.newInstanse();
                 getSupportActionBar().setTitle(getString(R.string.menu_radio));
@@ -90,18 +87,18 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 if (!Utils.isOnline(this)) initInternetConnectionDialog(this);
                 break;
 
-            case R.id.playlist:
-                fragment = new PlaylistFragment();
-                getSupportActionBar().setTitle(getString(R.string.menu_playlist));
-                mTitle = getString(R.string.menu_playlist);
-                if (!Utils.isOnline(this)) initInternetConnectionDialog(this);
-                break;
-            case R.id.settings:
-                fragment = new SettingsFragment();
-                getSupportActionBar().setTitle(getString(R.string.menu_settings));
-                mTitle = getString(R.string.menu_settings);
-                if (!Utils.isOnline(this)) initInternetConnectionDialog(this);
-                break;
+//            case R.id.playlist:
+//                fragment = new PlaylistFragment();
+//                getSupportActionBar().setTitle(getString(R.string.menu_playlist));
+//                mTitle = getString(R.string.menu_playlist);
+//                if (!Utils.isOnline(this)) initInternetConnectionDialog(this);
+//                break;
+//            case R.id.settings:
+//                fragment = new SettingsFragment();
+//                getSupportActionBar().setTitle(getString(R.string.menu_settings));
+//                mTitle = getString(R.string.menu_settings);
+//                if (!Utils.isOnline(this)) initInternetConnectionDialog(this);
+//                break;
         }
 
         if (fragment != null) {
