@@ -37,7 +37,8 @@ public class RadioPresenter implements Presenter {
     public void getTrackInfo() {
         if (mView.isControlActivated()) {
             getRequest().single().subscribe(getSubscriber());
-            Observable.timer(Const.LOAD_REFRESH_TIME, TimeUnit.SECONDS, Schedulers.io()).subscribe(new Subscriber<Long>() {
+            Observable.timer(Const.LOAD_REFRESH_TIME, TimeUnit.SECONDS, Schedulers.io())
+                    .subscribe(new Subscriber<Long>() {
                 @Override
                 public void onCompleted() {
                 }

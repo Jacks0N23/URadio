@@ -2,9 +2,12 @@ package com.jassdev.apps.andrroider.uradio;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.jassdev.apps.andrroider.uradio.Utils.Utils;
 
 /**
@@ -12,6 +15,15 @@ import com.jassdev.apps.andrroider.uradio.Utils.Utils;
  */
 
 public class BaseActivity extends AppCompatActivity {
+
+    private FirebaseAnalytics mFirebaseAnalytics;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        super.onCreate(savedInstanceState);
+    }
 
     public void initInternetConnectionDialog(final Context context) {
 

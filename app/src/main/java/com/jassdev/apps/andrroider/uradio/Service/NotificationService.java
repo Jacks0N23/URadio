@@ -11,7 +11,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.IBinder;
 import android.view.View;
@@ -46,9 +45,8 @@ public class NotificationService extends Service {
                 R.layout.status_bar);
 
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        notificationIntent.setAction(Const.ACTION.MAIN_ACTION);
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        notificationIntent.setAction(Intent.ACTION_MAIN);
+        notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, 0);
@@ -60,8 +58,9 @@ public class NotificationService extends Service {
 
         Intent closeIntent = new Intent(this, NotificationService.class);
         closeIntent.setAction(Const.ACTION.STOPFOREGROUND_ACTION);
+
         PendingIntent pcloseIntent = PendingIntent.getService(this, 0,
-                closeIntent, 0);
+                closeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         views.setOnClickPendingIntent(R.id.status_bar_play, pendingPlayIntent);
 
@@ -104,19 +103,19 @@ public class NotificationService extends Service {
             status = new Notification.Builder(this)
                     .setCustomContentView(views)
                     .setSmallIcon(R.mipmap.ic_logo)
-                    .setLargeIcon(BitmapFactory.decodeResource(null, R.mipmap.ic_launcher))
+                    .setContentIntent(pendingIntent)
+                    .setOngoing(true)
                     .build();
         } else {
             status = new Notification.Builder(this)
                     .setSmallIcon(R.mipmap.ic_logo)
-                    .setLargeIcon(BitmapFactory.decodeResource(null, R.mipmap.ic_launcher))
+                    .setContentIntent(pendingIntent)
+                    .setOngoing(true)
                     .build();
             status.contentView = views;
         }
-        //закрепляет в штоке уведомление
-        status.flags = Notification.FLAG_ONGOING_EVENT;
-        status.contentIntent = pendingIntent;
         startForeground(Const.FOREGROUND_SERVICE, status);
+
     }
 
     @Override
@@ -149,24 +148,18 @@ public class NotificationService extends Service {
         if (intent.getAction().equals(Const.ACTION.STARTFOREGROUND_ACTION)) {
             isPause = false;
             showNotification(0);
-            if (mView.isHQ()) {
-                player = new Player(mView, Const.RADIO_PATH_HQ, this);
-                player.start();
-            }
-            else {
-                player = new Player(mView, Const.RADIO_PATH, this);
-                player.start();
-            }
+            startHQorNot();
 
         } else if (intent.getAction().equals(Const.ACTION.PLAY_ACTION)) {
             if (!isPause) {
                 showNotification(2);
                 player.stop();
+                player.release();
                 isPause = true;
             } else {
                 showNotification(1);
                 isPause = false;
-
+                startHQorNot();
             }
         } else if (intent.getAction().equals(
                 Const.ACTION.STOPFOREGROUND_ACTION)) {
@@ -177,10 +170,22 @@ public class NotificationService extends Service {
                 mView.setIsControlActivated(false);
             }
             player.stop();
+            player.release();
             stopForeground(true);
             stopSelf();
         }
 
         return START_STICKY;
+    }
+
+    private void startHQorNot() {
+        if (mView.isHQ()) {
+            player = new Player(mView, Const.RADIO_PATH_HQ, this);
+            player.start();
+        } else {
+            player = new Player(mView, Const.RADIO_PATH, this);
+            player.start();
+        }
+
     }
 }

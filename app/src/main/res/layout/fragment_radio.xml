@@ -80,13 +80,14 @@
                     android:translationZ="2dp"
                     android:visibility="visible" />
 
-                 <View
-                     android:id="@+id/dummyView"
-                     android:layout_width="@dimen/play_size"
-                     android:layout_height="@dimen/play_size"
-                     android:layout_centerHorizontal="true"
-                     android:layout_marginTop="50dp"
-                     android:visibility="invisible"/>
+                <View
+                    android:id="@+id/dummyView"
+                    android:layout_width="@dimen/play_size"
+                    android:layout_height="@dimen/play_size"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="50dp"
+                    android:visibility="invisible" />
+
                 <ImageView
                     android:id="@+id/thumbDown"
                     android:layout_width="84dp"

@@ -19,6 +19,7 @@ import com.jassdev.apps.andrroider.uradio.Settings.SettingsFragment;
 import com.jassdev.apps.andrroider.uradio.Utils.Utils;
 import com.jassdev.apps.andrroider.uradio.databinding.AnotherMainBinding;
 
+
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private final String TAG = "MainActivity";
@@ -34,7 +35,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         binding = DataBindingUtil.setContentView(this, R.layout.another_main);
         toolbarSetup();
         navigationDrawerSetup();
-        getFragmentManager().beginTransaction().replace(R.id.container_main, new RadioFragment()).commit();
+        RadioFragment fragment = (RadioFragment) getFragmentManager().findFragmentById(R.id.container_main);
+        if (fragment == null) {
+            getFragmentManager().beginTransaction().replace(R.id.container_main, RadioFragment.newInstanse()).commit();
+        }
     }
 
     private void toolbarSetup() {
@@ -80,7 +84,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 if (!Utils.isOnline(this)) initInternetConnectionDialog(this);
                 break;
             case R.id.radio:
-                fragment = new RadioFragment();
+                fragment = RadioFragment.newInstanse();
                 getSupportActionBar().setTitle(getString(R.string.menu_radio));
                 mTitle = getString(R.string.menu_radio);
                 if (!Utils.isOnline(this)) initInternetConnectionDialog(this);

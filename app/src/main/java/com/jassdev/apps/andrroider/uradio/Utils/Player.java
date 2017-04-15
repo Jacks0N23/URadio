@@ -43,7 +43,7 @@ public class Player {
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 // This state if player is ready to work and loaded all data
                 Log.d(TAG, "onPlayerStateChanged: "+ playbackState);
-                if (playbackState == 3) {
+                if (playbackState == 3 || playbackState == 4) {
                     mView.setVisibilityToLoadingAnimation(View.GONE);
                     mView.setVisibilityToControlButton(View.VISIBLE);
                     mView.setControlButtonImageResource(R.drawable.pause);
