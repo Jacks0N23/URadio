@@ -46,6 +46,7 @@ public class NotificationService extends Service {
 
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.setAction(Intent.ACTION_MAIN);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
@@ -106,12 +107,19 @@ public class NotificationService extends Service {
                     .setContentIntent(pendingIntent)
                     .setOngoing(true)
                     .build();
-        } else {
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             status = new Notification.Builder(this)
                     .setSmallIcon(R.mipmap.ic_logo)
                     .setContentIntent(pendingIntent)
                     .setOngoing(true)
                     .build();
+            status.contentView = views;
+        } else {
+            status = new Notification.Builder(this)
+                    .setSmallIcon(R.mipmap.ic_logo)
+                    .setContentIntent(pendingIntent)
+                    .setOngoing(true)
+                    .getNotification();
             status.contentView = views;
         }
         startForeground(Const.FOREGROUND_SERVICE, status);
