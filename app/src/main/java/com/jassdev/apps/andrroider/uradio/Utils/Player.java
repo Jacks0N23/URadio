@@ -11,7 +11,7 @@ import com.google.android.exoplayer.FrameworkSampleSource;
 import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
 import com.google.android.exoplayer.TrackRenderer;
 import com.jassdev.apps.andrroider.uradio.R;
-import com.jassdev.apps.andrroider.uradio.Radio.View.MainView;
+import com.jassdev.apps.andrroider.uradio.radio.view.MainView;
 
 import static android.content.ContentValues.TAG;
 

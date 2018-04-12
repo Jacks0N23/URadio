@@ -12,9 +12,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.jassdev.apps.andrroider.uradio.Chat.ChatFragment;
-import com.jassdev.apps.andrroider.uradio.Radio.RadioFragment;
 import com.jassdev.apps.andrroider.uradio.Utils.Utils;
 import com.jassdev.apps.andrroider.uradio.databinding.AnotherMainBinding;
+import com.jassdev.apps.andrroider.uradio.radio.RadioFragment;
 
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -34,7 +34,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         navigationDrawerSetup();
         RadioFragment fragment = (RadioFragment) getFragmentManager().findFragmentById(R.id.container_main);
         if (fragment == null) {
-            getFragmentManager().beginTransaction().replace(R.id.container_main, RadioFragment.newInstanse()).commit();
+            getFragmentManager().beginTransaction().replace(R.id.container_main, RadioFragment.newInstance()).commit();
         }
     }
 
@@ -81,7 +81,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //                if (!Utils.isOnline(this)) initInternetConnectionDialog(this);
 //                break;
             case R.id.radio:
-                fragment = RadioFragment.newInstanse();
+                fragment = RadioFragment.newInstance();
                 getSupportActionBar().setTitle(getString(R.string.menu_radio));
                 mTitle = getString(R.string.menu_radio);
                 if (!Utils.isOnline(this)) initInternetConnectionDialog(this);

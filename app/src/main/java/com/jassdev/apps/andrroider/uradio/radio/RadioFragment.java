@@ -1,4 +1,4 @@
-package com.jassdev.apps.andrroider.uradio.Radio;
+package com.jassdev.apps.andrroider.uradio.radio;
 
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
@@ -17,13 +17,13 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.jassdev.apps.andrroider.uradio.R;
-import com.jassdev.apps.andrroider.uradio.Radio.Presenter.RadioPresenter;
-import com.jassdev.apps.andrroider.uradio.Radio.View.MainView;
 import com.jassdev.apps.andrroider.uradio.Service.BaseService;
 import com.jassdev.apps.andrroider.uradio.Service.NotificationService;
 import com.jassdev.apps.andrroider.uradio.Utils.Const;
 import com.jassdev.apps.andrroider.uradio.Utils.Player;
 import com.jassdev.apps.andrroider.uradio.databinding.FragmentRadioBinding;
+import com.jassdev.apps.andrroider.uradio.radio.presenter.RadioPresenter;
+import com.jassdev.apps.andrroider.uradio.radio.view.MainView;
 
 import static android.content.ContentValues.TAG;
 import static android.content.Context.VIBRATOR_SERVICE;
@@ -39,8 +39,7 @@ public class RadioFragment extends Fragment implements MainView {
      * https://tproger.ru/articles/android-online-radio/
      */
 
-
-    public static RadioFragment newInstanse() {
+    public static RadioFragment newInstance() {
         RadioFragment fragment = new RadioFragment();
         fragment.setRetainInstance(true);
         return fragment;
@@ -158,7 +157,6 @@ public class RadioFragment extends Fragment implements MainView {
         }
     }
 
-    // Vibrate when click on control button
     public void vibrate() {
         if (getActivity() != null)
             ((Vibrator) getActivity().getSystemService(VIBRATOR_SERVICE)).vibrate(Const.VIBRATE_TIME);
@@ -230,7 +228,7 @@ public class RadioFragment extends Fragment implements MainView {
     public class MusicIntentReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
+            if (Intent.ACTION_HEADSET_PLUG.equals(intent.getAction())) {
                 int state = intent.getIntExtra("state", -1);
                 switch (state) {
                     case 0:

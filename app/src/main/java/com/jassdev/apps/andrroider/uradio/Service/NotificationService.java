@@ -5,6 +5,7 @@ package com.jassdev.apps.andrroider.uradio.Service;
  */
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -18,9 +19,11 @@ import android.widget.RemoteViews;
 
 import com.jassdev.apps.andrroider.uradio.MainActivity;
 import com.jassdev.apps.andrroider.uradio.R;
-import com.jassdev.apps.andrroider.uradio.Radio.View.MainView;
 import com.jassdev.apps.andrroider.uradio.Utils.Const;
 import com.jassdev.apps.andrroider.uradio.Utils.Player;
+import com.jassdev.apps.andrroider.uradio.radio.view.MainView;
+
+import static com.jassdev.apps.andrroider.uradio.Utils.Const.FOREGROUND_SERVICE;
 
 
 public class NotificationService extends Service {
@@ -99,31 +102,44 @@ public class NotificationService extends Service {
         }
 
 // .setSmallIcon(R.mipmap.ic_logo) - почему-то без него не работает кастомный лэйаут
+        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            status = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
+//                    .setDeleteIntent(pcloseIntent)
+//                    .setCustomContentView(views)
+//                    .setSmallIcon(R.mipmap.ic_logo)
+//                    .setContentIntent(pendingIntent)
+//                    .setOngoing(true)
+//                    .build();
+//
+//            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "URadio", NotificationManager.IMPORTANCE_NONE);
+//            channel.setShowBadge(false);
+//            channel.setSound(null, null);
+//            nm.createNotificationChannel(channel);
+////            nm.notify(FOREGROUND_SERVICE, status);
+////            startForeground(FOREGROUND_SERVICE, status);
+//        } else
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             status = new Notification.Builder(this)
+                    .setPriority(Notification.PRIORITY_HIGH)
                     .setCustomContentView(views)
                     .setSmallIcon(R.mipmap.ic_logo)
                     .setContentIntent(pendingIntent)
                     .setOngoing(true)
                     .build();
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            startForeground(FOREGROUND_SERVICE, status);
+
+        } else {
             status = new Notification.Builder(this)
                     .setSmallIcon(R.mipmap.ic_logo)
                     .setContentIntent(pendingIntent)
                     .setOngoing(true)
                     .build();
             status.contentView = views;
-        } else {
-            status = new Notification.Builder(this)
-                    .setSmallIcon(R.mipmap.ic_logo)
-                    .setContentIntent(pendingIntent)
-                    .setOngoing(true)
-                    .getNotification();
-            status.contentView = views;
-        }
-        startForeground(Const.FOREGROUND_SERVICE, status);
+            startForeground(FOREGROUND_SERVICE, status);
 
+        }
     }
 
     @Override
@@ -153,12 +169,12 @@ public class NotificationService extends Service {
 
         registerReceiver(broadcastReceiver, filter);
 
-        if (intent.getAction().equals(Const.ACTION.STARTFOREGROUND_ACTION)) {
+        if (Const.ACTION.STARTFOREGROUND_ACTION.equals(intent.getAction())) {
             isPause = false;
             showNotification(0);
             startHQorNot();
 
-        } else if (intent.getAction().equals(Const.ACTION.PLAY_ACTION)) {
+        } else if (Const.ACTION.PLAY_ACTION.equals(intent.getAction())) {
             if (!isPause) {
                 showNotification(2);
                 player.stop();
@@ -169,8 +185,7 @@ public class NotificationService extends Service {
                 isPause = false;
                 startHQorNot();
             }
-        } else if (intent.getAction().equals(
-                Const.ACTION.STOPFOREGROUND_ACTION)) {
+        } else if (Const.ACTION.STOPFOREGROUND_ACTION.equals(intent.getAction())) {
             if (mView.getControlButton() != null) {
                 mView.setControlButtonImageResource(R.drawable.play);
                 mView.setVisibilityToLoadingAnimation(View.GONE);
@@ -194,6 +209,5 @@ public class NotificationService extends Service {
             player = new Player(mView, Const.RADIO_PATH, this);
             player.start();
         }
-
     }
 }
